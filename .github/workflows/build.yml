@@ -52,3 +52,34 @@ jobs:
             *.exe
             *.dmg
             *.deb
+  release:
+    name: Create Release
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download macOS artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: IPFinder-macos-latest
+          path: release/
+
+      - name: Download Windows artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: IPFinder-windows-latest
+          path: release/
+
+      - name: Download Linux artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: IPFinder-ubuntu-latest
+          path: release/
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release/**
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
