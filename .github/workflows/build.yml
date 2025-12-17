@@ -112,3 +112,24 @@ jobs:
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  notify-discord:
+    needs: [build, create-release]
+    runs-on: ubuntu-latest
+    if: always()  # 無論成功或失敗都通知
+    steps:
+      - name: Send Discord Notification
+        run: |
+          STATUS="成功 🎉"
+          if [ "${{ job.status }}" != "success" ]; then
+            STATUS="失敗 ❌"
+          fi
+
+          MESSAGE="IPFinder 自動建置：${STATUS}\n\
+Git Commit：${{ github.sha }}\n\
+查看紀錄：${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+          curl -H "Content-Type: application/json" \
+               -X POST \
+               -d "{\"content\": \"$MESSAGE\"}" \
+               ${{ secrets.DISCORD_WEBHOOK }}
