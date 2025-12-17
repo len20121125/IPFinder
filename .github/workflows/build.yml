@@ -1,0 +1,48 @@
+name: Build Multi-Platform Installers
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build:
+    name: Build for ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: "17"
+          distribution: "temurin"
+
+      - name: Build runtime image
+        run: |
+          jlink --add-modules java.base,java.net.http --output runtime --compress=2
+
+      - name: Package application
+        run: |
+          jpackage \
+            --name IPFinder \
+            --input . \
+            --main-jar IPFinder.jar \
+            --runtime-image runtime \
+            --type ${{ matrix.os == 'windows-latest' && 'exe' || (matrix.os == 'macos-latest' && 'dmg' || 'deb') }} \
+            --app-version 1.0
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: IPFinder-${{ matrix.os }}
+          path: |
+            *.exe
+            *.dmg
+            *.deb
