@@ -37,14 +37,7 @@ jobs:
       - name: Package Windows App
         if: matrix.os == 'windows-latest'
         run: |
-          jpackage ^
-            --name IPFinder ^
-            --input . ^
-            --main-jar IPFinder.jar ^
-            --runtime-image runtime ^
-            --type exe ^
-            --icon icons/IPFinder.ico ^
-            --app-version 1.0
+          jpackage --name IPFinder --input . --main-jar IPFinder.jar --runtime-image runtime --type exe --icon icons/IPFinder.ico --app-version 1.0
 
       # ===============================
       # macOS Build (.dmg)
