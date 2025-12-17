@@ -1,5 +1,8 @@
 name: Build Multi-Platform Installers
 
+permissions:
+  contents: write
+  
 on:
   push:
     tags:
