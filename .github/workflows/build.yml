@@ -2,7 +2,7 @@ name: Build Multi-Platform Installers
 
 permissions:
   contents: write
-  
+
 on:
   push:
     tags:
@@ -31,23 +31,52 @@ jobs:
         run: |
           jlink --add-modules java.base,java.net.http --output runtime --compress=2
 
-      - name: Package application (Windows)
+      # ===============================
+      # Windows Build (.exe)
+      # ===============================
+      - name: Package Windows App
         if: matrix.os == 'windows-latest'
         run: |
-          jpackage --name IPFinder --input . --main-jar IPFinder.jar --runtime-image runtime --type exe --app-version 1.0
+          jpackage ^
+            --name IPFinder ^
+            --input . ^
+            --main-jar IPFinder.jar ^
+            --runtime-image runtime ^
+            --type exe ^
+            --icon icons/IPFinder.ico ^
+            --app-version 1.0
 
-      - name: Package application (macOS / Linux)
-        if: matrix.os != 'windows-latest'
+      # ===============================
+      # macOS Build (.dmg)
+      # ===============================
+      - name: Package macOS App
+        if: matrix.os == 'macos-latest'
         run: |
           jpackage \
             --name IPFinder \
             --input . \
             --main-jar IPFinder.jar \
             --runtime-image runtime \
-            --type ${{ matrix.os == 'macos-latest' && 'dmg' || 'deb' }} \
+            --type dmg \
+            --icon icons/IPFinder.icns \
             --app-version 1.0
 
-      - name: Upload artifacts (modern v4)
+      # ===============================
+      # Linux Build (.deb)
+      # ===============================
+      - name: Package Linux App
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          jpackage \
+            --name IPFinder \
+            --input . \
+            --main-jar IPFinder.jar \
+            --runtime-image runtime \
+            --type deb \
+            --icon icons/IPFinder.png \
+            --app-version 1.0
+
+      - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: IPFinder-${{ matrix.os }}
@@ -55,6 +84,10 @@ jobs:
             *.exe
             *.dmg
             *.deb
+
+  # ===============================
+  # Release Section
+  # ===============================
   release:
     name: Create Release
     needs: build
