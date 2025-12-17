@@ -114,7 +114,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   notify-discord:
-    needs: [build, create-release]
+    needs: [build, release]
     runs-on: ubuntu-latest
     if: always()
     steps:
