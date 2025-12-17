@@ -28,14 +28,20 @@ jobs:
         run: |
           jlink --add-modules java.base,java.net.http --output runtime --compress=2
 
-      - name: Package application
+      - name: Package application (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          jpackage --name IPFinder --input . --main-jar IPFinder.jar --runtime-image runtime --type exe --app-version 1.0
+
+      - name: Package application (macOS / Linux)
+        if: matrix.os != 'windows-latest'
         run: |
           jpackage \
             --name IPFinder \
             --input . \
             --main-jar IPFinder.jar \
             --runtime-image runtime \
-            --type ${{ matrix.os == 'windows-latest' && 'exe' || (matrix.os == 'macos-latest' && 'dmg' || 'deb') }} \
+            --type ${{ matrix.os == 'macos-latest' && 'dmg' || 'deb' }} \
             --app-version 1.0
 
       - name: Upload artifacts (modern v4)
