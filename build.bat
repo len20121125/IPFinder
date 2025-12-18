@@ -3,7 +3,6 @@ echo ================================
 echo   Building IPFinder Project...
 echo ================================
 
-REM 設定來源與輸出位置
 set SRC=src
 set MAINCLASS=IPFinder
 set JARFILE=IPFinder.jar
@@ -22,14 +21,23 @@ if errorlevel 1 (
 )
 
 echo.
-echo [3] 打包成 JAR...
-jar cfe %JARFILE% %MAINCLASS% -C %SRC% %MAINCLASS%.class
+echo [3] 產生 MANIFEST.MF...
+echo Main-Class: %MAINCLASS%> manifest.mf
+echo.>> manifest.mf
+
+echo.
+echo [4] 打包成 JAR（包含 PNG 與 CLASS）...
+jar cfm %JARFILE% manifest.mf -C %SRC% .
 
 if errorlevel 1 (
     echo 打包失敗！
     pause
     exit /b
 )
+
+echo.
+echo 移除暫存 MANIFEST.MF
+del manifest.mf
 
 echo.
 echo ================================
