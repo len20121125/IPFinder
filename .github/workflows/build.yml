@@ -29,7 +29,7 @@ jobs:
 
       - name: Build runtime image
         run: |
-          jlink --add-modules java.base,java.net.http --output runtime --compress=2
+          jlink --add-modules java.base,java.net.http,java.desktop --output runtime --compress=2
 
       # ===============================
       # Windows Build (.exe)
