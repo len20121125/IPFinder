@@ -9,53 +9,41 @@ public class IPFinder {
     private static TrayIcon trayIcon;
     private static String currentIP = "查詢中...";
 
-    public static void main(String[] args) throws Exception {
+public static void main(String[] args) throws Exception {
 
-        System.out.println("IPFinder starting...");
-        System.out.println("SystemTray supported: " + SystemTray.isSupported());
+    System.setProperty("java.awt.headless", "false");
 
-        System.setProperty("java.awt.headless", "false");
+    System.out.println("IPFinder starting...");
+    System.out.println("SystemTray supported: " + SystemTray.isSupported());
 
-        if (!SystemTray.isSupported()) {
-            System.out.println("System tray not supported!");
-            return;
-        }
+    try {
 
-        // ⭐ 從 classpath 讀 icon（最安全）
         Image image = Toolkit.getDefaultToolkit().getImage(
             IPFinder.class.getResource("/IPFinder.png")
         );
+        System.out.println("Icon load: " + (image != null));
 
-        PopupMenu popup = new PopupMenu();
+        if (!SystemTray.isSupported()) {
+            System.out.println("SystemTray is NOT supported!");
+        } else {
+            System.out.println("SystemTray is supported, initializing...");
 
-        MenuItem refreshItem = new MenuItem("Refresh IP");
-        refreshItem.addActionListener(e -> refreshIP());
+            PopupMenu popup = new PopupMenu();
+            TrayIcon trayIcon = new TrayIcon(image, "IPFinder", popup);
+            trayIcon.setImageAutoSize(true);
+            SystemTray.getSystemTray().add(trayIcon);
 
-        MenuItem copyItem = new MenuItem("Copy IP");
-        copyItem.addActionListener(e -> {
-            Toolkit.getDefaultToolkit().getSystemClipboard().setContents(
-                new java.awt.datatransfer.StringSelection(currentIP), null
-            );
-        });
+            System.out.println("Tray icon added successfully!");
+        }
 
-        MenuItem exitItem = new MenuItem("Exit");
-        exitItem.addActionListener(e -> {
-            SystemTray.getSystemTray().remove(trayIcon);
-            System.exit(0);
-        });
-
-        popup.add(refreshItem);
-        popup.add(copyItem);
-        popup.addSeparator();
-        popup.add(exitItem);
-
-        trayIcon = new TrayIcon(image, "IPFinder", popup);
-        trayIcon.setImageAutoSize(true);
-
-        SystemTray.getSystemTray().add(trayIcon);
-
-        refreshIP();
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+
+    System.out.println("Press Enter to exit...");
+    System.in.read();
+}
+
 
     private static void refreshIP() {
         new Thread(() -> {
