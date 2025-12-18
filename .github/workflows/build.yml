@@ -15,8 +15,8 @@ jobs:
 
     strategy:
       matrix:
-        os: [windows-latest, macos-latest, ubuntu-latest]
-
+        #os: [windows-latest, macos-latest, ubuntu-latest]
+        os: [windows-latest]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -42,32 +42,32 @@ jobs:
       # ===============================
       # macOS Build (.dmg)
       # ===============================
-     # - name: Package macOS App
-     #   if: matrix.os == 'macos-latest'
-     #   run: |
-    #      jpackage \
-    #        --name IPFinder \
-    #        --input . \
-    #        --main-jar IPFinder.jar \
-    #        --runtime-image runtime \
-    #        --type dmg \
-    #        --icon icons/IPFinder.icns \
-    #        --app-version 1.0
+      - name: Package macOS App
+        if: matrix.os == 'macos-latest'
+        run: |
+          jpackage \
+            --name IPFinder \
+            --input . \
+            --main-jar IPFinder.jar \
+            --runtime-image runtime \
+            --type dmg \
+            --icon icons/IPFinder.icns \
+            --app-version 1.0
 
       # ===============================
       # Linux Build (.deb)
       # ===============================
-    #  - name: Package Linux App
-    #    if: matrix.os == 'ubuntu-latest'
-    #    run: |
-      #    jpackage \
-      #      --name IPFinder \
-      #      --input . \
-      #      --main-jar IPFinder.jar \
-      #      --runtime-image runtime \
-      #      --type deb \
-      #      --icon icons/IPFinder.png \
-      #      --app-version 1.0
+      - name: Package Linux App
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          jpackage \
+            --name IPFinder \
+            --input . \
+            --main-jar IPFinder.jar \
+            --runtime-image runtime \
+            --type deb \
+            --icon icons/IPFinder.png \
+            --app-version 1.0
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
