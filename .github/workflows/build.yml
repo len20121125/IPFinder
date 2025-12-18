@@ -87,11 +87,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Download macOS artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: IPFinder-macos-latest
-          path: release/
+#      - name: Download macOS artifact
+#        uses: actions/download-artifact@v4
+#        with:
+#          name: IPFinder-macos-latest
+#          path: release/
 
       - name: Download Windows artifact
         uses: actions/download-artifact@v4
@@ -99,11 +99,11 @@ jobs:
           name: IPFinder-windows-latest
           path: release/
 
-      - name: Download Linux artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: IPFinder-ubuntu-latest
-          path: release/
+#      - name: Download Linux artifact
+#        uses: actions/download-artifact@v4
+#        with:
+#          name: IPFinder-ubuntu-latest
+#          path: release/
 
       - name: Release
         uses: softprops/action-gh-release@v2
