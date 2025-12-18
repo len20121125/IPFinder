@@ -23,7 +23,7 @@ public class IPFinder {
 
         // ⭐ 從 classpath 讀 icon（最安全）
         Image image = Toolkit.getDefaultToolkit().getImage(
-            IPFinder.class.getResource("icons/IPFinder.png")
+            IPFinder.class.getResource("/IPFinder.png")
         );
 
         PopupMenu popup = new PopupMenu();
