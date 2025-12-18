@@ -31,14 +31,14 @@ jobs:
         run: |
           jlink --add-modules java.base,java.net.http,java.desktop --output runtime --compress=2
 
+
       # ===============================
       # Windows Build (.exe)
       # ===============================
       - name: Package Windows App
         if: matrix.os == 'windows-latest'
         run: |
-          jpackage --name IPFinder --input . --main-jar IPFinder.jar --runtime-image runtime --type exe --icon icons/IPFinder.ico --app-version 1.0
-
+          jpackage --name IPFinder --input . --main-jar IPFinder.jar --runtime-image runtime --type exe --icon icons/IPFinder.ico --win-console
       # ===============================
       # macOS Build (.dmg)
       # ===============================
