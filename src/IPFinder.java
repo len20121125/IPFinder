@@ -11,28 +11,33 @@ public class IPFinder {
 
     public static void main(String[] args) throws Exception {
 
+        System.out.println("IPFinder starting...");
+        System.out.println("SystemTray supported: " + SystemTray.isSupported());
+
+        System.setProperty("java.awt.headless", "false");
+
         if (!SystemTray.isSupported()) {
             System.out.println("System tray not supported!");
             return;
         }
 
-        // 讀取 icon（使用你打包時的 PNG）
-        Image image = Toolkit.getDefaultToolkit().getImage("icons/IPFinder.png");
+        // ⭐ 從 classpath 讀 icon（最安全）
+        Image image = Toolkit.getDefaultToolkit().getImage(
+            IPFinder.class.getResource("/IPFinder.png")
+        );
 
         PopupMenu popup = new PopupMenu();
 
-        // Refresh 功能
         MenuItem refreshItem = new MenuItem("Refresh IP");
         refreshItem.addActionListener(e -> refreshIP());
 
-        // Copy 功能
         MenuItem copyItem = new MenuItem("Copy IP");
         copyItem.addActionListener(e -> {
             Toolkit.getDefaultToolkit().getSystemClipboard().setContents(
-                    new java.awt.datatransfer.StringSelection(currentIP), null);
+                new java.awt.datatransfer.StringSelection(currentIP), null
+            );
         });
 
-        // Exit 功能
         MenuItem exitItem = new MenuItem("Exit");
         exitItem.addActionListener(e -> {
             SystemTray.getSystemTray().remove(trayIcon);
@@ -49,7 +54,6 @@ public class IPFinder {
 
         SystemTray.getSystemTray().add(trayIcon);
 
-        // 第一次啟動就查一次
         refreshIP();
     }
 
